@@ -1,16 +1,16 @@
 Quickstart
 ==========
 
-Run `try` and hopefully you'll see a huge list of headers spewed out.
+Run ``try`` and hopefully you'll see a huge list of headers spewed out.
 
 
 Contribute
 ==========
 
-Clang needs these kinds of minimal tutorials. If you try this out, fork the
-repo! Then if you make something even remotely interesting, send me a pull
-request and I'll add it to the collection (obviously I'll then need to
-organize things better).
+Clang needs these kinds of minimal tutorials to get people up and running
+quickly. If you try this out, fork the repo! Then if you make something
+even remotely interesting, send me a pull request and I'll add it to the
+collection (obviously I'll organize things better if that happens).
 
 Some ideas:
 
