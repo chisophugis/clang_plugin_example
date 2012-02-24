@@ -1,0 +1,4 @@
+#!/bin/sh
+make
+CC1_OPTS=$(./invocation_builder.py ./FindDependencies.so find-deps)
+clang++ $CC1_OPTS -fsyntax-only $(llvm-config --cxxflags) FindDependencies.cpp
