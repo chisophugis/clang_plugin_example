@@ -32,6 +32,7 @@ class FindDependencies : public PPCallbacks {
     if (const FileEntry *FE = SM.getFileEntryForID(SM.getFileID(Loc)))
       llvm::outs() << ">>> Depends on " << FE->getName() << " <<<\n";
   }
+
 };
 
 
@@ -41,15 +42,17 @@ class FindDependencies : public PPCallbacks {
 class FindDependenciesAction : public PluginASTAction {
  protected:
 
-  ASTConsumer *CreateASTConsumer(CompilerInstance &/*ci*/, llvm::StringRef) {
-    return new ASTConsumer; // dummy
+  // We must override this since it is pure virtual in PluginASTAction.
+  // We just return a dummy ASTConsumer. If you have a custom ASTConsumer
+  // that you want to run on the AST, then you may return it here instead.
+  ASTConsumer *CreateASTConsumer(CompilerInstance &, llvm::StringRef) {
+    return new ASTConsumer;
   }
 
   bool ParseArgs(const CompilerInstance &,
                  const std::vector<std::string>& args);
 
-  bool BeginSourceFileAction(CompilerInstance& CI,
-                             llvm::StringRef);
+  bool BeginSourceFileAction(CompilerInstance& CI, llvm::StringRef);
 };
 
 
