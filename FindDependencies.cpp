@@ -40,7 +40,6 @@ class FindDependencies : public PPCallbacks {
 // find all the methods that are overridable. BeginSourceFileAction is
 // probably the most interesting.
 class FindDependenciesAction : public PluginASTAction {
- protected:
 
   // We must override this since it is pure virtual in PluginASTAction.
   // We just return a dummy ASTConsumer. If you have a custom ASTConsumer
