@@ -1,3 +1,5 @@
+# This file uses features of GNU Make that other make programs don't have.
+
 CXX := clang++
 WARN ?= -Wall -Wextra -Weffc++ -pedantic -std=c++11
 CXXFLAGS += -fPIC $(WARN) $(shell llvm-config --cxxflags)
