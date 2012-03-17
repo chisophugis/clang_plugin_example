@@ -5,7 +5,7 @@
 #   export PREFIX="???/Debug+Asserts/"
 # before calling make, and LLVM_LIB_DIR and CLANG_LIB_DIR should take care
 # of themselves.
-PREFIX ?= /usr
+PREFIX ?= $(patsubst %/bin/clang++,%,$(shell which clang++))
 
 # Binaries, by default under PREFIX.
 CXX := $(PREFIX)/bin/clang++
@@ -24,7 +24,9 @@ CLANG_INCLUDE_DIR ?= $(LLVM_INCLUDE_DIR)
 
 # This will complain about a bunch of unused args in the clang headers.
 WARN ?= -Wall -Wextra -Weffc++ -pedantic
-CXXFLAGS += -std=c++11 -fPIC $(WARN) $(shell $(LLVM_CONFIG) --cxxflags)
+CXXFLAGS += -std=c++11 -fPIC $(WARN) $(shell $(LLVM_CONFIG) --cxxflags) \
+            -fno-rtti # llvm-config fails to include this and it has caused
+                      # headache for a lot of people
 CPPFLAGS += -I$(LLVM_INCLUDE_DIR) -I$(CLANG_INCLUDE_DIR)
 
 # Darwin requires different linker flags.
@@ -60,7 +62,7 @@ OBJS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 #
 # To pass args to the plugin, export PLUGIN_ARGS="your args here"
 # before running make.
-PLUGIN_OPTS := -load $(MODULE_NAME).$(SO) -plugin $(PLUGIN_NAME)
+PLUGIN_OPTS := -load ./$(MODULE_NAME).$(SO) -plugin $(PLUGIN_NAME)
 CC1_OPTS := $(addprefix -Xclang ,$(PLUGIN_OPTS))
 
 # If we have any plugin args, mangle them for the clang++ invocation and
@@ -73,16 +75,11 @@ endif
 .DEFAULT_GOAL: demo
 .PHONY: demo
 demo: $(MODULE_NAME).$(SO)
-# Having every bunch of flags on a separate line makes it easier to work out
-# what's going on when make echoes the command.
-	$(CXX) \
-	  $(CC1_OPTS) \
-	  $(CPPFLAGS) \
-	  $(CXXFLAGS) \
-	  $(LDFLAGS) \
-	  "$(MODULE_NAME).cpp"
-	test -f a.out
-	test -x a.out
+	# TODO: It seems that running the plugin interferes with the
+	# "usual" compilation so that a temporary .o doesn't get emitted,
+	# and then linking fails. Somehow fix that. For now, just use
+	# `-fsyntax-only`.
+	$(CXX) $(CC1_OPTS) -std=c++11 -fsyntax-only test.cpp
 
 $(MODULE_NAME).$(SO): $(OBJS)
 
@@ -91,7 +88,7 @@ $(MODULE_NAME).$(SO): $(OBJS)
 	$(CXX) -shared -o "$@" $^ $(LDFLAGS)
 
 
-%.o: %.cpp
+$(MODULE_NAME).o: $(MODULE_NAME).cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o "$@" $<
 
 .PHONY: clean
