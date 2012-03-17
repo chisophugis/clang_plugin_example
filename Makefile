@@ -8,20 +8,25 @@ LLVM_CONFIG := $(PREFIX)/bin/llvm-config
 WARN ?= -Wall -Wextra -Weffc++ -pedantic
 CXXFLAGS += -std=c++11 -fPIC $(WARN) $(shell $(LLVM_CONFIG) --cxxflags)
 
-CLANG_LIBS := -lclangFrontend \
-              -lclangParse \
-              -lclangSema \
-              -lclangAnalysis \
-              -lclangAST \
-              -lclangLex \
-              -lclangBasic \
-              -lclangDriver \
-              -lclangSerialization \
-              -lLLVMMC \
-              -lLLVMSupport
-
-LDFLAGS += $(shell llvm-config --ldflags) $(CLANG_LIBS)
-
+# Darwin requires different linker flags.
+OS ?= $(shell uname)
+LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags)
+ifeq ($(OS),Darwin)
+  LDFLAGS += -Wl,-undefined,dynamic_lookup
+else
+  CLANG_LIBS := -lclangFrontend \
+                -lclangParse \
+                -lclangSema \
+                -lclangAnalysis \
+                -lclangAST \
+                -lclangLex \
+                -lclangBasic \
+                -lclangDriver \
+                -lclangSerialization \
+                -lLLVMMC \
+                -lLLVMSupport
+  LDFLAGS += $(CLANG_LIBS)
+endif
 
 MODULE_NAME := FindDependencies
 OBJS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
