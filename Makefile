@@ -88,11 +88,11 @@ $(MODULE_NAME).$(SO): $(OBJS)
 
 %.$(SO): $(OBJS)
 # -o $@ $< must come *before*
-	$(CXX) -shared -o $@ $^ $(LDFLAGS)
+	$(CXX) -shared -o "$@" $^ $(LDFLAGS)
 
 
 %.o: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o "$@" $<
 
 .PHONY: clean
 clean:
