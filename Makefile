@@ -66,7 +66,7 @@ CC1_OPTS := $(addprefix -Xclang ,$(PLUGIN_OPTS))
 # If we have any plugin args, mangle them for the clang++ invocation and
 # append to CC1_OPTS.
 ifneq ($(strip $(PLUGIN_ARGS)),)
-  PLUGIN_FLAG := -plugin-arg-$(MODULE_NAME)
+  PLUGIN_FLAG := -plugin-arg-$(PLUGIN_NAME)
   CC1_OPTS += $(addprefix -Xclang ,$(addprefix $(PLUGIN_FLAG) ,$(PLUGIN_ARGS)))
 endif
 
