@@ -5,8 +5,16 @@ PREFIX ?= /usr
 CXX := $(PREFIX)/bin/clang++
 LLVM_CONFIG := $(PREFIX)/bin/llvm-config
 
+# If building using an llvm/clang source checkout:
+#   export LLVM_INCLUDE_DIR=???/llvm/include
+#   export CLANG_INCLUDE_DIR=???/llvm/tools/clang/include
+# before calling make.
+LLVM_INCLUDE_DIR ?= $(PREFIX)/share/include
+CLANG_INCLUDE_DIR ?= $(PREFIX)/share/include
+
 WARN ?= -Wall -Wextra -Weffc++ -pedantic
 CXXFLAGS += -std=c++11 -fPIC $(WARN) $(shell $(LLVM_CONFIG) --cxxflags)
+CPPFLAGS += -I$(LLVM_INCLUDE_DIR) -I$(CLANG_INCLUDE_DIR)
 
 # Darwin requires different linker flags.
 OS ?= $(shell uname)
@@ -41,7 +49,7 @@ $(MODULE_NAME).so: $(OBJS)
 
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:
