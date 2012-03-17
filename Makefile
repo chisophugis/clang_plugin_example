@@ -12,13 +12,21 @@ LLVM_CONFIG := $(PREFIX)/bin/llvm-config
 LLVM_INCLUDE_DIR ?= $(PREFIX)/share/include
 CLANG_INCLUDE_DIR ?= $(PREFIX)/share/include
 
+# If building using an llvm/clang source checkout:
+#   export LLVM_LIB_DIR=???/llvm/Debug+Asserts/lib
+#   export CLANG_LIB_DIR="$LLVM_LIB_DIR"
+# before calling make.
+LLVM_LIB_DIR ?= $(PREFIX)/lib
+CLANG_LIB_DIR ?= $(PREFIX)/lib
+
 WARN ?= -Wall -Wextra -Weffc++ -pedantic
 CXXFLAGS += -std=c++11 -fPIC $(WARN) $(shell $(LLVM_CONFIG) --cxxflags)
 CPPFLAGS += -I$(LLVM_INCLUDE_DIR) -I$(CLANG_INCLUDE_DIR)
 
 # Darwin requires different linker flags.
 OS ?= $(shell uname)
-LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags)
+LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags) \
+           -L$(LLVM_LIB_DIR) -L$(CLANG_LIB_DIR)
 ifeq ($(OS),Darwin)
   LDFLAGS += -Wl,-undefined,dynamic_lookup
 else
