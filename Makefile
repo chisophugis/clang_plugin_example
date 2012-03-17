@@ -99,3 +99,6 @@ clean:
 	-rm -f $(MODULE_NAME).$(SO)
 	-rm -f $(OBJS)
 	-rm -f a.out
+ifeq ($(OS),Darwin)
+	-rm -rf a.out.dSYM
+endif
