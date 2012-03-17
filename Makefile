@@ -29,6 +29,7 @@ LDFLAGS += $(shell $(LLVM_CONFIG) --ldflags) \
            -L$(LLVM_LIB_DIR) -L$(CLANG_LIB_DIR)
 ifeq ($(OS),Darwin)
   LDFLAGS += -Wl,-undefined,dynamic_lookup
+  SO = dylib
 else
   CLANG_LIBS := -lclangFrontend \
                 -lclangParse \
@@ -42,6 +43,7 @@ else
                 -lLLVMMC \
                 -lLLVMSupport
   LDFLAGS += $(CLANG_LIBS)
+  SO = so
 endif
 
 MODULE_NAME := FindDependencies
@@ -49,10 +51,10 @@ OBJS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
 
 # first rule, built by default
-$(MODULE_NAME).so: $(OBJS)
+$(MODULE_NAME).$(SO): $(OBJS)
 
+%.$(SO): $(OBJS)
 # -o $@ $< must come *before*
-%.so: $(OBJS)
 	$(CXX) -shared -o $@ $^ $(LDFLAGS)
 
 
@@ -61,4 +63,4 @@ $(MODULE_NAME).so: $(OBJS)
 
 .PHONY: clean
 clean:
-	rm -f $(MODULE_NAME).so $(OBJS)
+	-rm -f $(MODULE_NAME).$(SO) $(OBJS)
