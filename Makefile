@@ -1,6 +1,10 @@
 # This file uses features of GNU Make that other make programs don't have.
 
-CXX := clang++
+# Handle binaries and libraries outside the normal paths.
+PREFIX ?= /usr
+CXX := $(PREFIX)/bin/clang++
+LLVM_CONFIG := $(PREFIX)/bin/llvm-config
+
 WARN ?= -Wall -Wextra -Weffc++ -pedantic
 CXXFLAGS += -std=c++11 -fPIC $(WARN) $(shell $(LLVM_CONFIG) --cxxflags)
 
