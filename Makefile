@@ -1,24 +1,28 @@
 # This file uses features of GNU Make that other make programs don't have.
 
 # Handle binaries and libraries outside the normal paths.
+# If building using an llvm/clang source checkout:
+#   export PREFIX="???/Debug+Asserts/"
+# before calling make, and LLVM_LIB_DIR and CLANG_LIB_DIR should take care
+# of themselves.
 PREFIX ?= /usr
+
+# Binaries, by default under PREFIX.
 CXX := $(PREFIX)/bin/clang++
 LLVM_CONFIG := $(PREFIX)/bin/llvm-config
+
+# Library directories, by default under PREFIX.
+LLVM_LIB_DIR ?= $(PREFIX)/lib
+CLANG_LIB_DIR ?= $(LLVM_LIB_DIR)
 
 # If building using an llvm/clang source checkout:
 #   export LLVM_INCLUDE_DIR=???/llvm/include
 #   export CLANG_INCLUDE_DIR=???/llvm/tools/clang/include
 # before calling make.
 LLVM_INCLUDE_DIR ?= $(PREFIX)/share/include
-CLANG_INCLUDE_DIR ?= $(PREFIX)/share/include
+CLANG_INCLUDE_DIR ?= $(LLVM_INCLUDE_DIR)
 
-# If building using an llvm/clang source checkout:
-#   export LLVM_LIB_DIR=???/llvm/Debug+Asserts/lib
-#   export CLANG_LIB_DIR="$LLVM_LIB_DIR"
-# before calling make.
-LLVM_LIB_DIR ?= $(PREFIX)/lib
-CLANG_LIB_DIR ?= $(PREFIX)/lib
-
+# This will complain about a bunch of unused args in the clang headers.
 WARN ?= -Wall -Wextra -Weffc++ -pedantic
 CXXFLAGS += -std=c++11 -fPIC $(WARN) $(shell $(LLVM_CONFIG) --cxxflags)
 CPPFLAGS += -I$(LLVM_INCLUDE_DIR) -I$(CLANG_INCLUDE_DIR)
