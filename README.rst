@@ -1,9 +1,9 @@
 Quickstart
 ==========
 
-Run ``./try`` and hopefully you'll see a huge list of headers spewed out.
-If that didn't work, contact me (chisophugis@gmail.com) immediately and I
-will fix it.
+Run ``make demo`` and hopefully you'll see a huge list of headers spewed
+out.  If that didn't work, contact me (chisophugis@gmail.com) immediately
+and I will fix it.
 
 
 Goal
