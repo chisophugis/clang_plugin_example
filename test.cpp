@@ -1,10 +1,9 @@
 #include <iostream>
-#include <vector>
 
 int main(int argc, char *argv[]) {
   (void)argc; (void)argv;
-  std::vector<int> v = {0, 1, 2, 3, 4};
-  for (auto x : v) {
+  for (unsigned x = 0; x != 5; ++x) {
     std::cout << x << "\n";
   }
+  return 0;
 }
