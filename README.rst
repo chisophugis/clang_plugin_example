@@ -42,8 +42,10 @@ Contribute
 
 Clang needs these kinds of minimal tutorials to get people up and running
 quickly. If you try this out, fork the repo! Then if you make something
-even remotely interesting, send me a pull request and I'll add it to the
-collection (obviously I'll organize things better if that happens).
+even remotely interesting that helped you learn some part of clang, send me
+a message and we'll see if we can distill a nice simple example plugin out
+of it and add it to the collection (obviously I'll organize things better
+if that happens).
 
 Some ideas:
 
