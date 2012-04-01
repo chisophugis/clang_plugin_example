@@ -16,7 +16,9 @@ documentation-wise for clang (and LLVM in general), and my experience was
 so distasteful that I feel impelled to fix the situation.
 
 However, the doxygen docs are fantastic! Once you make it past the inital
-hurdle of the "Hello World", it's pretty smooth sailing.
+hurdle of the "Hello World", it's pretty smooth sailing. I find that
+googling "clang SomeClass" will usually have the doxygen documentation as
+the first hit.
 
 
 Improvements

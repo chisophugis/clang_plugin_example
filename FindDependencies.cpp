@@ -36,6 +36,8 @@ class FindDependencies : public PPCallbacks {
 };
 
 
+// This class is "the plugin". Plugins work by overriding methods of the
+// PluginASTAction class that are called over the course of compilation.
 // Check the doxygen docs for the class hierarchy of PluginASTAction to
 // find all the methods that are overridable. BeginSourceFileAction is
 // probably the most interesting.
