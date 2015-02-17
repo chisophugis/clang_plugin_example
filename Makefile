@@ -79,7 +79,7 @@ endif
 # and then linking fails. Somehow fix that. For now, just use
 # `-fsyntax-only`.
 demo: $(MODULE_NAME).$(SO)
-	$(CXX) $(CC1_OPTS) -std=c++11 -fsyntax-only test.cpp
+	$(CXX) $(CC1_OPTS) -std=c++11 -fsyntax-only demo/test.cpp
 
 $(MODULE_NAME).$(SO): $(OBJS)
 
