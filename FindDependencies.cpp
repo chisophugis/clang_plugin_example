@@ -46,8 +46,8 @@ class FindDependenciesAction : public PluginASTAction {
   // We must override this since it is pure virtual in PluginASTAction.
   // We just return a dummy ASTConsumer. If you have a custom ASTConsumer
   // that you want to run on the AST, then you may return it here instead.
-  ASTConsumer *CreateASTConsumer(CompilerInstance &, llvm::StringRef) {
-    return new ASTConsumer;
+  std::unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance &, llvm::StringRef) {
+    return llvm::make_unique<ASTConsumer>();
   }
 
   bool ParseArgs(const CompilerInstance &,
@@ -62,7 +62,7 @@ class FindDependenciesAction : public PluginASTAction {
 bool FindDependenciesAction::BeginSourceFileAction(CompilerInstance& CI,
                                                    llvm::StringRef) {
   Preprocessor &PP = CI.getPreprocessor();
-  PP.addPPCallbacks(new FindDependencies(CI.getSourceManager()));
+  PP.addPPCallbacks(llvm::make_unique<FindDependencies>(CI.getSourceManager()));
   return true;
 }
 
