@@ -7,6 +7,7 @@
 #include "clang/Lex/Preprocessor.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/Support/FormattedStream.h"
 
 #include <string>
 #include <vector>
@@ -20,17 +21,28 @@ namespace {
 // http://llvm.org/devmtg/2011-11/Gregor_ExtendingClang.pdf
 class FindDependencies : public PPCallbacks {
   SourceManager& SM;
+  int Indent;
+  llvm::formatted_raw_ostream FOuts;
  public:
 
-  explicit FindDependencies(SourceManager& sm) : SM(sm) { }
+  explicit FindDependencies(SourceManager& sm)
+    : SM(sm), Indent(0), FOuts(llvm::outs()) { }
 
   void FileChanged(SourceLocation Loc,
                    FileChangeReason Reason,
                    SrcMgr::CharacteristicKind, FileID) {
-    if (Reason != EnterFile)
+    if (Reason != EnterFile && Reason != ExitFile)
       return;
-    if (const FileEntry *FE = SM.getFileEntryForID(SM.getFileID(Loc)))
-      llvm::outs() << ">>> Depends on " << FE->getName() << " <<<\n";
+    if (const FileEntry *FE = SM.getFileEntryForID(SM.getFileID(Loc))) {
+      if (Reason == EnterFile) {
+        FOuts << "Include Tree:";
+        FOuts.PadToColumn(13 + Indent * 2);
+        FOuts << FE->getName() << "\n";
+        Indent++;
+      } else if (Reason == ExitFile) {
+        Indent--;
+      }
+    }
   }
 
 };
